@@ -2,9 +2,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { PRODUCTS } from '@/data/config';
 
-// 👉 Aqui fica toda a parte de "cérebro" do meu carrinho de compras.
-// Geralmente eu não preciso editar nada neste arquivo.
-
 type BaseProduct = typeof PRODUCTS[0];
 
 export type CartItem = BaseProduct & { 
@@ -81,6 +78,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     }));
   };
 
+  // 👉 Total base sem os acréscimos
   const cartTotal = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
 
   return (

@@ -3,14 +3,12 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ShoppingBag, Plus, Minus, Trash2, ArrowRight, MessageCircle } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
-import { CLIENT_INFO, formatPrice } from '@/data/config';
+import { CLIENT_INFO, formatPrice, CARD_FEE_PERCENTAGE } from '@/data/config';
 
 export default function CartDrawer() {
   const { cartItems, isCartOpen, setIsCartOpen, removeFromCart, updateQuantity, cartTotal } = useCart();
   const [isCheckout, setIsCheckout] = useState(false);
   
-  // 👉 Aqui estão os campos do meu formulário de compra. Se eu quiser criar 
-  // um campo para "CEP", eu crio um `const [cep, setCep] = useState('')` aqui.
   const [buyerName, setBuyerName] = useState('');
   const [street, setStreet] = useState('');
   const [number, setNumber] = useState('');
@@ -22,15 +20,28 @@ export default function CartDrawer() {
     if (!isCartOpen) setIsCheckout(false);
   }, [isCartOpen]);
 
-  // 👉 AQUI EU EDITO A MENSAGEM QUE VAI CHEGAR NO MEU WHATSAPP!
+  // 👉 LÓGICA DE ACRÉSCIMO DA MAQUININHA
+  const isCardPayment = paymentMethod.includes('Cartão');
+  const cardFeeAmount = isCardPayment ? cartTotal * (CARD_FEE_PERCENTAGE / 100) : 0;
+  const finalTotal = cartTotal + cardFeeAmount;
+
   const handleFinishOrder = (e: React.FormEvent) => {
     e.preventDefault();
     let text = `*NOVO PEDIDO - ${CLIENT_INFO.name}* 🚀\n\n`;
     text += `*👤 Cliente:* ${buyerName}\n`;
     text += `*💳 Pagamento:* ${paymentMethod}\n\n`;
     text += `*Resumo do Pedido:*\n`;
-    cartItems.forEach(item => { text += `${item.quantity}x ${item.name} (${item.selectedColor}, ${item.selectedSize}) - ${formatPrice(item.price * item.quantity)}\n`; });
-    text += `\n*Total a pagar:* *${formatPrice(cartTotal)}*\n\n`;
+    cartItems.forEach(item => { text += `${item.quantity}x ${item.name} (${item.selectedColor}, Tam: ${item.selectedSize}) - ${formatPrice(item.price * item.quantity)}\n`; });
+    
+    text += `\n*Subtotal:* ${formatPrice(cartTotal)}\n`;
+    
+    // 👉 Adiciona a taxa no WhatsApp se for cartão
+    if (isCardPayment) {
+      text += `*Acréscimo Cartão (${CARD_FEE_PERCENTAGE}%):* ${formatPrice(cardFeeAmount)}\n`;
+    }
+    
+    text += `*Total a pagar:* *${formatPrice(finalTotal)}*\n\n`;
+    
     text += `*📍 Dados de Entrega:*\n`;
     text += `Rua: ${street}, Nº ${number}\n`;
     text += `Bairro: ${neighborhood}\n`;
@@ -89,7 +100,6 @@ export default function CartDrawer() {
                       </AnimatePresence>
                     </div>
                   ) : (
-                    // 👉 AQUI É O FORMULÁRIO QUE O CLIENTE PREENCHE
                     <form id="checkout-form" onSubmit={handleFinishOrder} className="space-y-6 pb-12">
                       <div className="border-b border-zinc-200 pb-6">
                          <p className="text-sm font-bold text-zinc-500 uppercase tracking-widest mb-4">Resumo</p>
@@ -112,7 +122,7 @@ export default function CartDrawer() {
                           <input required type="text" value={number} onChange={(e) => setNumber(e.target.value)} placeholder="Número" className="w-1/3 border border-zinc-300 p-3 text-sm focus:border-black outline-none rounded-sm transition-all" />
                         </div>
                         <input required type="text" value={neighborhood} onChange={(e) => setNeighborhood(e.target.value)} placeholder="Bairro" className="w-full border border-zinc-300 p-3 text-sm focus:border-black outline-none rounded-sm transition-all" />
-                        <input required type="text" value={reference} onChange={(e) => setReference(e.target.value)} placeholder="Ponto de Referência" className="w-full border border-zinc-300 p-3 text-sm focus:border-black outline-none rounded-sm transition-all" />
+                        <input type="text" value={reference} onChange={(e) => setReference(e.target.value)} placeholder="Ponto de Referência (Opcional)" className="w-full border border-zinc-300 p-3 text-sm focus:border-black outline-none rounded-sm transition-all" />
                       </div>
 
                       <div className="space-y-4 border-t border-zinc-200 pt-6">
@@ -124,6 +134,11 @@ export default function CartDrawer() {
                           <option value="Cartão de Débito">Cartão de Débito</option>
                           <option value="Dinheiro">Dinheiro (Espécie)</option>
                         </select>
+                        {isCardPayment && (
+                          <p className="text-xs text-red-500 font-bold mt-1 animate-pulse">
+                            ⚠️ Acréscimo de {CARD_FEE_PERCENTAGE}% da maquininha aplicado.
+                          </p>
+                        )}
                       </div>
                     </form>
                   )}
@@ -131,12 +146,26 @@ export default function CartDrawer() {
               )}
             </div>
 
+            {/* 👉 RODAPÉ DO CARRINHO COM O VALOR E AS TAXAS */}
             {cartItems.length > 0 && (
               <div className="border-t border-zinc-200 p-6 bg-zinc-50">
-                <div className="flex justify-between items-center mb-6">
-                  <span className="text-sm font-bold uppercase tracking-widest text-zinc-500">Total</span>
-                  <span className="text-2xl font-black tracking-tight text-black">{formatPrice(cartTotal)}</span>
+                <div className="flex justify-between items-center mb-1">
+                  <span className="text-xs font-bold uppercase tracking-widest text-zinc-500">Subtotal</span>
+                  <span className="text-sm font-bold text-black">{formatPrice(cartTotal)}</span>
                 </div>
+                
+                {isCardPayment && (
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-xs font-bold uppercase tracking-widest text-red-500">Taxa Cartão ({CARD_FEE_PERCENTAGE}%)</span>
+                    <span className="text-sm font-bold text-red-500">+{formatPrice(cardFeeAmount)}</span>
+                  </div>
+                )}
+
+                <div className="flex justify-between items-center mb-6 mt-4 pt-4 border-t border-zinc-200">
+                  <span className="text-sm font-bold uppercase tracking-widest text-black">Total a pagar</span>
+                  <span className="text-2xl font-black tracking-tight text-black">{formatPrice(finalTotal)}</span>
+                </div>
+
                 {!isCheckout ? (
                   <button onClick={() => setIsCheckout(true)} className="w-full bg-black text-white py-4 font-bold uppercase tracking-widest text-sm hover:bg-zinc-800 transition-colors flex items-center justify-center gap-2 rounded-sm">
                     Avançar para Entrega <ArrowRight size={18} />
