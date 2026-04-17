@@ -30,9 +30,9 @@ const standardColors = [
 // 👉 CATÁLOGO DE PRODUTOS
 export const PRODUCTS = [
   // Combos
-  { id: 30, name: "Kit 2 Camisas Dri-Fit Pro", price: 149.90, category: "Combos", slug: "combos", imageUrl: "/imagens/produtos/aaa copy.webp", sizes: clothingSizes, colors: [{name: 'Preto + Branco', hex: '#18181b'}] },
-  { id: 30, name: "Combo Treino (Short + Top)", price: 199.90, category: "Combos", slug: "combos", imageUrl: "/imagens/produtos/aaa copy.webp", sizes: clothingSizes, colors: standardColors },
-  { id: 30, name: "Combo Treino camisa + short homem", price: 199.90, category: "Combos", slug: "combos", imageUrl: "/imagens/produtos/aaa copy.webp", sizes: clothingSizes, colors: standardColors },
+  { id: 31, name: "Kit 2 Camisas Dri-Fit Pro", price: 149.90, category: "Combos", slug: "combos", imageUrl: "/imagens/produtos/aaa copy.webp", sizes: clothingSizes, colors: [{name: 'Preto + Branco', hex: '#18181b'}] },
+  { id: 32, name: "Combo Treino (Short + Top)", price: 199.90, category: "Combos", slug: "combos", imageUrl: "/imagens/produtos/aaa copy.webp", sizes: clothingSizes, colors: standardColors },
+  { id: 34, name: "Combo Treino camisa + short homem", price: 199.90, category: "Combos", slug: "combos", imageUrl: "/imagens/produtos/aaa copy.webp", sizes: clothingSizes, colors: standardColors },
 
 
   // Camisas de Time
