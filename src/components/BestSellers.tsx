@@ -81,7 +81,6 @@ export default function BestSellers() {
             {topProducts.map((product, index) => (
               <div
                 key={`best-seller-${product.id}-${index}`}
-                // AQUI ESTÁ A CORREÇÃO PRINCIPAL: Larguras fixas e flex-none
                 className="w-[340px] sm:w-[180px] md:w-[220px] lg:w-[340px] flex-none snap-start group cursor-pointer"
               >
                 <div className="aspect-[3/4] bg-zinc-900 mb-2.5 relative overflow-hidden rounded-sm w-full">

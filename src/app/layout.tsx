@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import { GoogleAnalytics } from '@next/third-parties/google'
 import './globals.css'
-// 👉 Importando todos os componentes globais
 import { CartProvider } from '@/context/CartContext'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
@@ -10,7 +9,6 @@ import CartDrawer from '@/components/CartDrawer'
 import QuickAddModal from '@/components/QuickAddModal'
 
 // 👉 CONFIGURAÇÃO DA FONTE: 
-// O Next.js baixa a fonte no servidor (Zero Layout Shift).
 const inter = Inter({ 
   subsets: ['latin'], 
   variable: '--font-inter', 
@@ -60,7 +58,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="pt-BR" className={`scroll-smooth ${inter.variable}`}>
       
-      {/* 👉 O 'flex' e 'min-h-screen' garantem que o Footer fique sempre no fundo da tela */}
       <body className="min-h-screen flex flex-col bg-white text-black font-sans antialiased selection:bg-black selection:text-white">
         
         <CartProvider>
@@ -68,7 +65,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <CartDrawer />
           <QuickAddModal />
           
-          {/* 👉 O "flex-grow" estica o meio do site para empurrar o rodapé. */}
           <main className="flex-grow pt-[88px] w-full overflow-hidden">
             {children}
           </main>

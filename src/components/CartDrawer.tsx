@@ -125,7 +125,6 @@ export default function CartDrawer() {
 
                       <div className="space-y-4 border-t border-zinc-200 pt-6">
                         <p className="text-sm font-bold text-black uppercase tracking-widest">Método de Pagamento</p>
-                        {/* 👉 ADICIONADO: 'relative' no container e 'appearance-none' no select para visual customizado Premium */}
                         <div className="relative">
                           <select required value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)} className="w-full border border-zinc-300 p-3 pr-10 text-sm focus:border-black outline-none rounded-sm transition-all bg-white appearance-none cursor-pointer">
                             <option value="" disabled>Selecione uma opção</option>
