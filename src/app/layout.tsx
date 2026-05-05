@@ -73,7 +73,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </CartProvider>
 
         {/* 👉 GOOGLE ANALYTICS */}
-        <GoogleAnalytics gaId="G-SEU_CODIGO_AQUI" />
+        <GoogleAnalytics gaId="G-RW30GQ41P9" />
         
       </body>
     </html>
