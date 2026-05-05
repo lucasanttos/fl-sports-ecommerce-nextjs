@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ShoppingBag, ZoomIn } from 'lucide-react'; 
+import { X, ShoppingBag, ZoomIn, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { formatPrice } from '@/data/config';
 
@@ -9,7 +9,8 @@ export default function QuickAddModal() {
   const { quickAddProduct, setQuickAddProduct, addToCart } = useCart();
   const [selectedSize, setSelectedSize] = useState<string>('');
   const [selectedColor, setSelectedColor] = useState<string>('');
-  const [isImageExpanded, setIsImageExpanded] = useState<boolean>(false); 
+  const [isImageExpanded, setIsImageExpanded] = useState<boolean>(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
 
   useEffect(() => {
     if (quickAddProduct) {
@@ -18,7 +19,8 @@ export default function QuickAddModal() {
       setSelectedColor(
         quickAddProduct.colors.length === 1 ? quickAddProduct.colors[0].name : ''
       );
-      setIsImageExpanded(false); 
+      setIsImageExpanded(false);
+      setCurrentImageIndex(0);
     } else {
       document.body.style.overflow = '';
     }
@@ -27,12 +29,28 @@ export default function QuickAddModal() {
 
   if (!quickAddProduct) return null;
 
+  // 👉 Pega as imagens do produto (suporta o novo formato "images")
+  const productImages = quickAddProduct.images && quickAddProduct.images.length > 0
+    ? quickAddProduct.images
+    : [];
+
+  const hasImages = productImages.length > 0;
+  const hasMultipleImages = productImages.length > 1;
+
+  const nextImage = () => {
+    setCurrentImageIndex((prev) => (prev + 1) % productImages.length);
+  };
+
+  const prevImage = () => {
+    setCurrentImageIndex((prev) => (prev - 1 + productImages.length) % productImages.length);
+  };
+
   const canAdd = selectedSize && selectedColor;
 
   const handleAdd = () => {
     if (!canAdd) return;
     addToCart(quickAddProduct, selectedColor, selectedSize);
-    setQuickAddProduct(null); 
+    setQuickAddProduct(null);
   };
 
   return (
@@ -65,7 +83,7 @@ export default function QuickAddModal() {
 
           {/* Imagem do Produto */}
           <div className="
-            relative bg-zinc-100 flex-shrink-0 flex items-center justify-center
+            relative bg-zinc-100 flex-shrink-0 flex flex-col items-center justify-center
             sm:w-2/5 sm:h-auto
             group
           ">
@@ -78,27 +96,98 @@ export default function QuickAddModal() {
               <X size={18} />
             </button>
 
-            {quickAddProduct.imageUrl ? (
-              <div
-                className="relative w-full cursor-zoom-in"
-                onClick={() => setIsImageExpanded(true)} 
-              >
-                <img
-                  src={quickAddProduct.imageUrl}
-                  alt={quickAddProduct.name}
-                  className="
-                    w-full object-contain
-                    max-h-[30vh] sm:max-h-none sm:h-full
-                  "
-                />
-                {/* Ícone de zoom para indicar que a imagem é clicável */}
-                <div className="
-                  absolute inset-0 flex items-center justify-center bg-black/20 opacity-0
-                  group-hover:opacity-100 transition-opacity duration-200
-                  pointer-events-none // Garante que o clique passe para a div pai
-                ">
-                  <ZoomIn size={32} className="text-white" />
+            {hasImages ? (
+              <div className="relative w-full">
+
+                {/* Imagem atual */}
+                <div
+                  className="relative w-full cursor-zoom-in"
+                  onClick={() => setIsImageExpanded(true)}
+                >
+                  <img
+                    src={productImages[currentImageIndex]}
+                    alt={`${quickAddProduct.name} - foto ${currentImageIndex + 1}`}
+                    className="
+                      w-full object-contain
+                      max-h-[30vh] sm:max-h-none sm:h-full
+                    "
+                  />
+                  {/* Ícone de zoom */}
+                  <div className="
+                    absolute inset-0 flex items-center justify-center bg-black/20 opacity-0
+                    group-hover:opacity-100 transition-opacity duration-200
+                    pointer-events-none
+                  ">
+                    <ZoomIn size={32} className="text-white" />
+                  </div>
                 </div>
+
+                {/* Botões de navegação — só aparece se tiver mais de 1 imagem */}
+                {hasMultipleImages && (
+                  <>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); prevImage(); }}
+                      className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/90 hover:bg-black p-1.5 rounded-full shadow-md transition-all z-10"
+                      aria-label="Imagem anterior"
+                    >
+                      <ChevronLeft size={18} />
+                    </button>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); nextImage(); }}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/90 hover:bg-black p-1.5 rounded-full shadow-md transition-all z-10"
+                      aria-label="Próxima imagem"
+                    >
+                      <ChevronRight size={18} />
+                    </button>
+                  </>
+                )}
+
+                {/* Miniaturas — só aparece se tiver mais de 1 imagem */}
+                {hasMultipleImages && (
+                  <div className="flex gap-1.5 justify-center p-2 bg-white border-t border-zinc-100">
+                    {productImages.map((img, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setCurrentImageIndex(index)}
+                        className={`
+                          w-10 h-10 rounded overflow-hidden border-2 flex-shrink-0 transition-all
+                          ${currentImageIndex === index
+                            ? 'border-black'
+                            : 'border-transparent opacity-60 hover:opacity-100'
+                          }
+                        `}
+                        aria-label={`Ver foto ${index + 1}`}
+                      >
+                        <img
+                          src={img}
+                          alt={`Miniatura ${index + 1}`}
+                          className="w-full h-full object-cover"
+                        />
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {/* Indicador de posição (pontos) */}
+                {hasMultipleImages && (
+                  <div className="flex justify-center gap-1.5 py-1.5">
+                    {productImages.map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setCurrentImageIndex(index)}
+                        className={`
+                          rounded-full transition-all
+                          ${currentImageIndex === index
+                            ? 'w-4 h-1.5 bg-black'
+                            : 'w-1.5 h-1.5 bg-zinc-300'
+                          }
+                        `}
+                        aria-label={`Ir para foto ${index + 1}`}
+                      />
+                    ))}
+                  </div>
+                )}
+
               </div>
             ) : (
               <div className="w-full flex items-center justify-center py-10">
@@ -216,16 +305,16 @@ export default function QuickAddModal() {
 
         </motion.div>
 
-        {/* --- Modal de Imagem Expandida --- */}
+        {/* Modal de Imagem Expandida */}
         <AnimatePresence>
-          {isImageExpanded && quickAddProduct.imageUrl && (
-            <div className="fixed inset-0 z-[90] flex items-center justify-center p-4"> {/* z-[90] para ficar acima do modal principal */}
+          {isImageExpanded && hasImages && (
+            <div className="fixed inset-0 z-[90] flex items-center justify-center p-4">
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 onClick={() => setIsImageExpanded(false)}
-                className="absolute inset-0 bg-black/90" 
+                className="absolute inset-0 bg-black/90"
               />
 
               <motion.div
@@ -236,10 +325,38 @@ export default function QuickAddModal() {
                 className="relative max-w-[90vw] max-h-[90vh] flex items-center justify-center"
               >
                 <img
-                  src={quickAddProduct.imageUrl}
+                  src={productImages[currentImageIndex]}
                   alt={quickAddProduct.name}
-                  className="max-w-full max-h-full object-contain" 
+                  className="max-w-full max-h-full object-contain"
                 />
+
+                {/* Navegação no modal expandido */}
+                {hasMultipleImages && (
+                  <>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); prevImage(); }}
+                      className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/90 hover:bg-black p-2 rounded-full shadow-lg transition-all"
+                      aria-label="Imagem anterior"
+                    >
+                      <ChevronLeft size={22} />
+                    </button>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); nextImage(); }}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/90 hover:bg-black p-2 rounded-full shadow-lg transition-all"
+                      aria-label="Próxima imagem"
+                    >
+                      <ChevronRight size={22} />
+                    </button>
+                  </>
+                )}
+
+                {/* Contador no modal expandido */}
+                {hasMultipleImages && (
+                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/60 text-white text-xs font-bold px-3 py-1.5 rounded-full">
+                    {currentImageIndex + 1} / {productImages.length}
+                  </div>
+                )}
+
                 <button
                   onClick={() => setIsImageExpanded(false)}
                   className="absolute top-4 right-4 z-10 p-2 bg-white rounded-full shadow-lg"
@@ -251,7 +368,6 @@ export default function QuickAddModal() {
             </div>
           )}
         </AnimatePresence>
-        {/* --- Fim do Modal de Imagem Expandida --- */}
 
       </div>
     </AnimatePresence>

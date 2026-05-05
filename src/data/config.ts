@@ -30,32 +30,52 @@ const standardColors = [
 // 👉 CATÁLOGO DE PRODUTOS
 export const PRODUCTS = [
   // Combos (mantido)
-  { id: 31, name: "Kit 2 Camisas Dri-Fit Pro", price: 70.00, category: "Combos", slug: "combos", imageUrl: "/imagens/produtos/combo1.jpeg", sizes: clothingSizes, colors: [{ name: "Preto + Branco", hex: "#18181b" }] },
-  { id: 32, name: "Combo Treino (Short + Top)", price: 70.00, category: "Combos", slug: "combos", imageUrl: "/imagens/produtos/combo1.jpeg", sizes: clothingSizes, colors: standardColors },
-  { id: 34, name: "Combo Treino camisa + short homem", price: 70.00, category: "Combos", slug: "combos", imageUrl: "/imagens/produtos/combo1.jpeg", sizes: clothingSizes, colors: standardColors },
+  //  { 
+  //    id: 31, 
+  //    name: "Kit 2 Camisas Dri-Fit Pro", 
+  //    price: 70.00, 
+  //    category: "Combos", 
+  //    slug: "combos", 
+  //    images: ["/imagens/produtos/combo1.jpeg"], 
+  //    sizes: clothingSizes, 
+  //    colors: [{ name: "Preto + Branco", hex: "#18181b" }] 
+  //  },
+  //  { 
+  //    id: 32, 
+  //    name: "Combo Treino (Short + Top)", 
+  //    price: 70.00, 
+  //    category: "Combos", 
+  //    slug: "combos", 
+  //    images: ["/imagens/produtos/combo1.jpeg"], 
+  //    sizes: clothingSizes, 
+  //    colors: standardColors 
+  //  },
+  //  { 
+  //    id: 34, 
+  //    name: "Combo Treino camisa + short homem", 
+  //    price: 70.00, 
+  //    category: "Combos", 
+  //    slug: "combos", 
+  //    images: ["/imagens/produtos/combo1.jpeg"], 
+  //    sizes: clothingSizes, 
+  //    colors: standardColors 
+  //  },
 
-  // Camisas de Time (ids diferentes)
+  // Camisas de Time 
   {
     id: 10,
-    name: "Camisa Seleção Brasileira 24/25",
-    price: 70.00,
+    name: "Camisa Seleção Brasileira",
+    price: 50.00,
     category: "Camisas de Time",
     slug: "camisas-de-time",
-    imageUrl: "/imagens/produtos/aaa.webp",
+    images: [
+      "/imagens/produtos/camisa-time-brasil.jpeg",
+            "/imagens/produtos/aaa.webp"
+
+    ],
     sizes: clothingSizes,
     colors: [{ name: "Amarelo", hex: "#facc15" }]
   },
-  {
-    id: 11,
-    name: "Camisa Seleção Brasileira 24/25",
-    price: 70.00,
-    category: "Camisas de Time",
-    slug: "camisa-30-1",
-    imageUrl: "/imagens/produtos/aaa.webp",
-    sizes: clothingSizes,
-    colors: [{ name: "Amarelo", hex: "#facc15" }]
-  },
-  
 
   // SHORT TACTEL COM ELASTANO
   {
@@ -64,7 +84,9 @@ export const PRODUCTS = [
     price: 70.00,
     category: "short-tactel",
     slug: "short-tactel",
-    imageUrl: "/imagens/produtos/Short tactel com elastano .jpeg",
+    images: [
+      "/imagens/produtos/Short tactel com elastano .jpeg"
+    ],
     sizes: ["M", "G", "GG"],
     colors: [
       { name: "Preto", hex: "#18181b" },
@@ -82,7 +104,9 @@ export const PRODUCTS = [
     price: 70.00,
     category: "short-duplo-fem",
     slug: "short-duplo-fem",
-    imageUrl: "/imagens/produtos/Short duplo.jpeg",
+    images: [
+      "/imagens/produtos/Short duplo.jpeg"
+    ],
     sizes: ["P", "M", "G", "GG"],
     colors: [
       { name: "Branco", hex: "#ffffff" },
@@ -100,7 +124,9 @@ export const PRODUCTS = [
     price: 70.00,
     category: "short-dry-fit",
     slug: "short-dry-fit",
-    imageUrl: "/imagens/produtos/SHORT NIKE POLIAMIDA.jpeg",
+    images: [
+      "/imagens/produtos/SHORT NIKE POLIAMIDA.jpeg"
+    ],
     sizes: ["M", "G", "GG"],
     colors: [
       { name: "Preto", hex: "#000000" },
@@ -117,7 +143,9 @@ export const PRODUCTS = [
     price: 70.00,
     category: "conjunto-feminino-poliamida",
     slug: "blusa-feminina",
-    imageUrl: "/imagens/produtos/BLUSA POLIAMIDA .jpeg",
+    images: [
+      "/imagens/produtos/BLUSA POLIAMIDA .jpeg"
+    ],
     sizes: ["M", "G", "GG"],
     colors: [
       { name: "Preto", hex: "#18181b" },
@@ -139,7 +167,9 @@ export const PRODUCTS = [
     price: 70.00,
     category: "camisa-dry-fit",
     slug: "camisa-dry-fit",
-    imageUrl: "/imagens/produtos/CAMISA ADIDAS TRÊS LISTRAS .jpeg",
+    images: [
+      "/imagens/produtos/CAMISA ADIDAS TRÊS LISTRAS .jpeg"
+    ],
     sizes: ["P", "M", "G", "GG"],
     colors: [
       { name: "Preto", hex: "#000000" },
@@ -153,6 +183,68 @@ export const PRODUCTS = [
     ]
   },
 
+  // CAMISA TEXTURIZADA
+  {
+    id: 50,
+    name: "Camisa Texturizada Diesel",
+    price: 60.00,
+    category: "Camisa Texturizada",
+    slug: "camisa-texturizada",
+    images: [
+      "/imagens/produtos/camisa-texturizada-diesel.jpeg"
+    ],
+    sizes: ["M", "G", "GG"],
+    colors: [
+      { name: "Preto", hex: "#000000" },
+      { name: "Verde Militar", hex: "#556B2F" },
+      { name: "Cinza Chumbo", hex: "#4B5563" },
+      { name: "Off-White", hex: "#F3F4F6" },
+      { name: "Bege Areia", hex: "#D6D3D1" },
+      { name: "Marrom Café", hex: "#78350F" },
+      { name: "Vermelho", hex: "#DC2626" }
+    ]
+  },
+  {
+    id: 51,
+    name: "Camisa Texturizada Hugo Boss",
+    price: 60.00,
+    category: "Camisa Texturizada",
+    slug: "camisa-texturizada",
+    images: [
+      "/imagens/produtos/camisa-texturizada-boss.jpeg"
+    ],
+    sizes: ["M", "G", "GG"],
+    colors: [
+      { name: "Preto", hex: "#000000" },
+      { name: "Verde Militar", hex: "#556B2F" },
+      { name: "Cinza Chumbo", hex: "#4B5563" },
+      { name: "Off-White", hex: "#F3F4F6" },
+      { name: "Bege Areia", hex: "#D6D3D1" },
+      { name: "Marrom Café", hex: "#78350F" },
+      { name: "Vermelho", hex: "#DC2626" }
+    ]
+  },
+  {
+    id: 52,
+    name: "Camisa Texturizada Ralph Lauren",
+    price: 60.00,
+    category: "Camisa Texturizada",
+    slug: "camisa-texturizada",
+    images: [
+      "/imagens/produtos/camisa-texturizada-lauren.jpeg"
+    ],
+    sizes: ["M", "G", "GG"],
+    colors: [
+      { name: "Preto", hex: "#000000" },
+      { name: "Verde Militar", hex: "#556B2F" },
+      { name: "Cinza Chumbo", hex: "#4B5563" },
+      { name: "Off-White", hex: "#F3F4F6" },
+      { name: "Bege Areia", hex: "#D6D3D1" },
+      { name: "Marrom Café", hex: "#78350F" },
+      { name: "Vermelho", hex: "#DC2626" }
+    ]
+  },
+
   // SHORT POLIAMIDA
   {
     id: 40,
@@ -160,7 +252,9 @@ export const PRODUCTS = [
     price: 70.00,
     category: "short-dry-fit",
     slug: "short-dry-fit",
-    imageUrl: "/imagens/produtos/Short poliamida .jpeg",
+    images: [
+      "/imagens/produtos/Short poliamida .jpeg"
+    ],
     sizes: ["M", "G", "GG"],
     colors: [
       { name: "Rosa Pink", hex: "#e879f9" },
@@ -174,50 +268,22 @@ export const PRODUCTS = [
     ]
   },
 
-  // CAMISA PLUS 1
+  // CAMISA PLUS 
   {
     id: 41,
-    name: "Camisa Plus - Estilo Clássico",
+    name: "Camisa Plus",
     price: 70.00,
     category: "Camisa Plus",
     slug: "camisa-plus",
-    imageUrl: "/imagens/produtos/CAMISAS PLUS.jpeg",
+    images: [
+      "/imagens/produtos/CAMISAS PLUS.jpeg"
+    ],
     sizes: ["G1", "G2", "G3"],
     colors: [
       { name: "Preto", hex: "#18181b" },
       { name: "Azul royal", hex: "#1e3a8a" },
       { name: "Cinza", hex: "#71717a" },
       { name: "Branco", hex: "#ffffff" }
-    ]
-  },
-  {
-    id: 43,
-    name: "Camisa Plus - Estilo Premium",
-    price: 70.00,
-    category: "Camisa Plus",
-    slug: "camisa-plus",
-    imageUrl: "/imagens/produtos/CAMISAS PLUS.jpeg",
-    sizes: ["G3", "G4", "G5"],
-    colors: [
-      { name: "Branco", hex: "#ffffff" },
-      { name: "Vermelho", hex: "#ef4444" },
-      { name: "Azul marinho", hex: "#1e40af" },
-      { name: "Roxo", hex: "#9333ea" }
-    ]
-  },
-  {
-    id: 44,
-    name: "Camisa Plus - Estilo Premium",
-    price: 70.00,
-    category: "Camisa Plus",
-    slug: "camisa-plus",
-    imageUrl: "/imagens/produtos/CAMISAS PLUS.jpeg",
-    sizes: ["G3", "G4", "G5"],
-    colors: [
-      { name: "Branco", hex: "#ffffff" },
-      { name: "Vermelho", hex: "#ef4444" },
-      { name: "Azul marinho", hex: "#1e40af" },
-      { name: "Roxo", hex: "#9333ea" }
     ]
   },
 
@@ -228,54 +294,97 @@ export const PRODUCTS = [
     price: 70.00,
     category: "acessorios",
     slug: "bone",
-    imageUrl: "/imagens/produtos/bone.jpeg",
+    images: [
+      "/imagens/produtos/bone.jpeg"
+    ],
     sizes: oneSize,
     colors: standardColors
   },
 
-    // RAGATA MACHAO
-{
-  id: 43,
-  name: "Regata Machão Nike",
-  price: 70.00,
-  category: "Regatas",
-  slug: "regata-machao-over-suedine",
-  imageUrl: "/imagens/produtos/regata-machao-nike.jpeg", 
-  sizes: ["M", "G", "GG"],
-  colors: [
-    { name: "Preto", hex: "#000000" },
-    { name: "Mostarda", hex: "#B8860B" },
-    { name: "Creme", hex: "#FFFDD0" },
-    { name: "Branco", hex: "#FFFFFF" }
-  ]
-},
-{
-  id: 44,
-  name: "Regata Machão Jordan",
-  price: 70.00,
-  category: "Regatas",
-  slug: "regata-machao-over-suedine",
-  imageUrl: "/imagens/produtos/regata-machao-jordan.jpeg", 
-  sizes: ["M", "G", "GG"],
-  colors: [
-    { name: "Preto", hex: "#000000" },
-    { name: "Mostarda", hex: "#B8860B" },
-    { name: "Creme", hex: "#FFFDD0" },
-    { name: "Branco", hex: "#FFFFFF" }
-  ]
-}
+  // REGATA MACHÃO
+  {
+    id: 43,
+    name: "Regata Machão Nike",
+    price: 70.00,
+    category: "Regatas",
+    slug: "regata-machao-over-suedine",
+    images: [
+      "/imagens/produtos/regata-machao-nike.jpeg"
+    ],
+    sizes: ["M", "G", "GG"],
+    colors: [
+      { name: "Preto", hex: "#000000" },
+      { name: "Mostarda", hex: "#B8860B" },
+      { name: "Creme", hex: "#FFFDD0" },
+      { name: "Branco", hex: "#FFFFFF" }
+    ]
+  },
+  {
+    id: 44,
+    name: "Regata Machão Jordan",
+    price: 70.00,
+    category: "Regatas",
+    slug: "regata-machao-over-suedine",
+    images: [
+      "/imagens/produtos/regata-machao-jordan.jpeg"
+    ],
+    sizes: ["M", "G", "GG"],
+    colors: [
+      { name: "Preto", hex: "#000000" },
+      { name: "Mostarda", hex: "#B8860B" },
+      { name: "Creme", hex: "#FFFDD0" },
+      { name: "Branco", hex: "#FFFFFF" }
+    ]
+  },
+  {
+    id: 45,
+    name: "Regata Machão",
+    price: 70.00,
+    category: "Regatas",
+    slug: "regata-machao-over-suedine",
+    images: [
+      "/imagens/produtos/regata-machao.jpeg"
+    ],
+    sizes: ["M", "G", "GG"],
+    colors: [
+      { name: "Preto", hex: "#000000" },
+      { name: "Mostarda", hex: "#B8860B" },
+      { name: "Creme", hex: "#FFFDD0" },
+      { name: "Branco", hex: "#FFFFFF" }
+    ]
+  },
 
+  // SHORT SARJA IMPORTADO
+  {
+    id: 70,
+    name: "Short sarja importado",
+    price: 70.00,
+    category: "Short Sarja",
+    slug: "short-sarja-importado",
+    images: [
+      "/imagens/produtos/short-sarja.jpeg"
+    ],
+    sizes: ["M", "G", "GG"],
+    colors: [
+      { name: "Preto", hex: "#1a1a1a" },
+      { name: "Verde Oliva", hex: "#556B2F" },
+      { name: "Cinza Claro", hex: "#D3D3D3" },
+      { name: "Bege Areia", hex: "#E8E4C9" },
+      { name: "Kaki", hex: "#C2B280" },
+      { name: "Cinza Médio", hex: "#808080" }
+    ]
+  },
 ];
 
 // 👉 COLEÇÕES/CATEGORIAS
 export const CATEGORIES = [
-  {
-    id: "combos",
-    slug: "combos",
-    title: "Combos",
-    subtitle: "Monte seu kit e economize mais",
-    imgColor: "bg-gradient-to-br from-red-700 to-red-900",
-  },
+  // { 
+  //   id: "combos",
+  //   slug: "combos",
+  //   title: "Combos",
+  //   subtitle: "Monte seu kit e economize mais",
+  //   imgColor: "bg-gradient-to-br from-red-700 to-red-900",
+  // },
   {
     id: "camisas-time",
     slug: "camisas-de-time",
@@ -283,13 +392,13 @@ export const CATEGORIES = [
     subtitle: "Represente seu clube com orgulho",
     imgColor: "bg-gradient-to-br from-yellow-500 to-yellow-800",
   },
-  {
-    id: "peruana",
-    slug: "camisa-peruana-40-1",
-    title: "Camisa Peruana 40.1",
-    subtitle: "Premium, macia e com caimento impecável",
-    imgColor: "bg-gradient-to-br from-slate-600 to-slate-900",
-  },
+  // {
+  //   id: "peruana",
+  //   slug: "camisa-peruana-40-1",
+  //   title: "Camisa Peruana 40.1",
+  //   subtitle: "Premium, macia e com caimento impecável",
+  //   imgColor: "bg-gradient-to-br from-slate-600 to-slate-900",
+  // },
   {
     id: "texturizada",
     slug: "camisa-texturizada",
@@ -297,13 +406,13 @@ export const CATEGORIES = [
     subtitle: "Acabamento sofisticado em cada detalhe",
     imgColor: "bg-gradient-to-br from-stone-500 to-stone-800",
   },
-  {
-    id: "30-1",
-    slug: "camisa-30-1",
-    title: "Camisa 30.1",
-    subtitle: "Conforto e durabilidade para o cotidiano",
-    imgColor: "bg-gradient-to-br from-neutral-500 to-neutral-800",
-  },
+  // {
+  //   id: "30-1",
+  //   slug: "camisa-30-1",
+  //   title: "Camisa 30.1",
+  //   subtitle: "Conforto e durabilidade para o cotidiano",
+  //   imgColor: "bg-gradient-to-br from-neutral-500 to-neutral-800",
+  // },
   {
     id: "dryfit",
     slug: "camisa-dry-fit",
@@ -311,20 +420,20 @@ export const CATEGORIES = [
     subtitle: "Tecnologia que mantém você seco no treino",
     imgColor: "bg-gradient-to-br from-sky-500 to-blue-800",
   },
-  {
-    id: "tenis",
-    slug: "tenis-esportivo",
-    title: "Tênis Esportivo",
-    subtitle: "Velocidade, conforto e estilo a cada passo",
-    imgColor: "bg-gradient-to-br from-orange-500 to-orange-900",
-  },
-  {
-    id: "oculos",
-    slug: "oculos",
-    title: "Óculos",
-    subtitle: "Proteção UV com visual moderno e arrojado",
-    imgColor: "bg-gradient-to-br from-violet-500 to-purple-900",
-  },
+  // {
+  //   id: "tenis",
+  //   slug: "tenis-esportivo",
+  //   title: "Tênis Esportivo",
+  //   subtitle: "Velocidade, conforto e estilo a cada passo",
+  //   imgColor: "bg-gradient-to-br from-orange-500 to-orange-900",
+  // },
+  // {
+  //   id: "oculos",
+  //   slug: "oculos",
+  //   title: "Óculos",
+  //   subtitle: "Proteção UV com visual moderno e arrojado",
+  //   imgColor: "bg-gradient-to-br from-violet-500 to-purple-900",
+  // },
   {
     id: "tactel",
     slug: "short-tactel",
@@ -347,19 +456,26 @@ export const CATEGORIES = [
     imgColor: "bg-gradient-to-br from-pink-400 to-pink-800",
   },
   {
+    id: "short-sarja",
+    slug: "short-sarja",
+    title: "Short Sarja importado",
+    subtitle: "Estilo e conforto na medida certa",
+    imgColor: "bg-gradient-to-br from-blue-500 to-indigo-300",
+  },
+  {
     id: "blusa-fem",
     slug: "blusa-feminina",
     title: "Blusas Femininas",
     subtitle: "Feminilidade e leveza para qualquer ocasião",
     imgColor: "bg-gradient-to-br from-rose-400 to-rose-700",
   },
-  {
-    id: "conjunto-fem",
-    slug: "conjunto-feminino-poliamida",
-    title: "Conjunto Feminino Poliamida",
-    subtitle: "Modelagem perfeita com toque de elegância",
-    imgColor: "bg-gradient-to-br from-fuchsia-500 to-indigo-800",
-  },
+  // {
+  //   id: "conjunto-fem",
+  //   slug: "conjunto-feminino-poliamida",
+  //   title: "Conjunto Feminino Poliamida",
+  //   subtitle: "Modelagem perfeita com toque de elegância",
+  //   imgColor: "bg-gradient-to-br from-fuchsia-500 to-indigo-800",
+  // },
   {
     id: "bone",
     slug: "bone",
