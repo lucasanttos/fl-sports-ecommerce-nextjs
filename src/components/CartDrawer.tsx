@@ -70,21 +70,21 @@ export default function CartDrawer() {
             transition={{ type: 'tween', duration: 0.5 }} 
             className="fixed top-0 right-0 h-full w-full max-w-lg bg-white shadow-2xl z-[70] flex flex-col"
           >
-            <div className="flex items-center justify-between p-6 border-b border-zinc-200">
-              <h2 className="text-xl font-black uppercase tracking-tighter">
-                {isCheckout ? 'Finalizar Pedido' : 'Seu Carrinho'}
-              </h2>
-              <button 
-                onClick={() => setIsCartOpen(false)} 
-                className="p-2 hover:bg-zinc-100 rounded-full transition-colors"
-              >
-                <X size={24} className="text-black" />
-              </button>
-            </div>
+            <div className="flex items-center justify-between p-6 border-b border-zinc-200 bg-gradient-to-r from-zinc-60 to-white">
+  <h2 className="text-xl font-black uppercase tracking-tighter text-zinc-500">
+    {isCheckout ? 'Finalizar Pedido' : 'Seu Carrinho'}
+  </h2>
+  <button 
+    onClick={() => setIsCartOpen(false)} 
+    className="p-2 hover:bg-zinc-200 rounded-full transition-colors"
+  >
+    <X size={24} className="text-zinc-900" />
+  </button>
+</div>
             
             <div className="flex-1 overflow-y-auto p-6 text-black">
               {cartItems.length === 0 ? (
-                <div className="flex flex-col items-center justify-center h-full text-zinc-400">
+                <div className="flex flex-col items-center justify-center h-full text-zinc-500">
                   <ShoppingBag size={64} className="mb-4 opacity-50 mx-auto" />
                   <p className="font-medium tracking-wide">Seu carrinho está vazio.</p>
                 </div>
