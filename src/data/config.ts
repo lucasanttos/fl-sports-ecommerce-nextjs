@@ -29,7 +29,7 @@ const standardColors = [
 
 // 👉 CATÁLOGO DE PRODUTOS
 export const PRODUCTS = [
-  // Combos (mantido)
+  // Combos 
   //  { 
   //    id: 31, 
   //    name: "Kit 2 Camisas Dri-Fit Pro", 
@@ -69,7 +69,8 @@ export const PRODUCTS = [
     category: "Camisas de Time",
     slug: "camisas-de-time",
     images: [
-      "/imagens/produtos/camisa-time-brasil.jpeg",
+      "/imagens/produtos/camisa-time-brasil-1.jpeg",
+      "/imagens/produtos/camisa-time-brasil-2.jpeg",
     ],
     sizes: clothingSizes,
     colors: [{ name: "Amarelo", hex: "#facc15" }]
