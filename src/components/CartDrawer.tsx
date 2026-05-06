@@ -1,15 +1,24 @@
 "use client";
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ShoppingBag, Plus, Minus, Trash2, ArrowRight, MessageCircle, ChevronDown } from 'lucide-react';
+import { X, ShoppingBag, Plus, Minus, Trash2, ArrowRight, MessageCircle, ChevronDown, MapPin, Store } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { CLIENT_INFO, formatPrice, CARD_FEE_PERCENTAGE } from '@/data/config';
+
+const STORE_ADDRESS = {
+  street: 'Rua Potengi',
+  number: '82',
+  neighborhood: 'Centro',
+  full: 'Rua Potengi, N° 82 - Centro',
+  mapsUrl: 'https://www.google.com/maps/dir//R.+Potengi,+82+-+Sao+Paulo+Do+Potengi,+S%C3%A3o+Paulo+do+Potengi+-+RN,+59460-000/@-5.8938063,-35.7642432,19z/data=!4m18!1m8!3m7!1s0x7b22f934124a7a7:0xce33357bfa835ed8!2sR.+Potengi,+82+-+Sao+Paulo+Do+Potengi,+S%C3%A3o+Paulo+do+Potengi+-+RN,+59460-000!3b1!8m2!3d-5.8938076!4d-35.7635995!16s%2Fg%2F11hbgkgm94!4m8!1m0!1m5!1m1!1s0x7b22f934124a7a7:0xce33357bfa835ed8!2m2!1d-35.7635995!2d-5.8938076!3e9?entry=ttu&g_ep=EgoyMDI2MDUwMi4wIKXMDSoASAFQAw%3D%3D'
+};
 
 export default function CartDrawer() {
   const { cartItems, isCartOpen, setIsCartOpen, removeFromCart, updateQuantity, cartTotal } = useCart();
   const [isCheckout, setIsCheckout] = useState(false);
   
   const [buyerName, setBuyerName] = useState('');
+  const [deliveryMode, setDeliveryMode] = useState(''); // 'delivery' ou 'pickup'
   const [street, setStreet] = useState('');
   const [number, setNumber] = useState('');
   const [neighborhood, setNeighborhood] = useState('');
@@ -17,7 +26,10 @@ export default function CartDrawer() {
   const [paymentMethod, setPaymentMethod] = useState('');
 
   useEffect(() => {
-    if (!isCartOpen) setIsCheckout(false);
+    if (!isCartOpen) {
+      setIsCheckout(false);
+      setDeliveryMode('');
+    }
   }, [isCartOpen]);
 
   const isCardPayment = paymentMethod.includes('Cartão');
@@ -26,11 +38,16 @@ export default function CartDrawer() {
 
   const handleFinishOrder = (e: React.FormEvent) => {
     e.preventDefault();
+    
     let text = `*NOVO PEDIDO - ${CLIENT_INFO.name}* 🚀\n\n`;
     text += `*👤 Cliente:* ${buyerName}\n`;
-    text += `*💳 Pagamento:* ${paymentMethod}\n\n`;
+    text += `*💳 Pagamento:* ${paymentMethod}\n`;
+    text += `*📦 Modalidade:* ${deliveryMode === 'delivery' ? '🛵 ENTREGA' : '🏪 RETIRADA NA LOJA'}\n\n`;
+    
     text += `*Resumo do Pedido:*\n`;
-    cartItems.forEach(item => { text += `${item.quantity}x ${item.name} (${item.selectedColor}, Tam: ${item.selectedSize}) - ${formatPrice(item.price * item.quantity)}\n`; });
+    cartItems.forEach(item => { 
+      text += `${item.quantity}x ${item.name} (${item.selectedColor}, Tam: ${item.selectedSize}) - ${formatPrice(item.price * item.quantity)}\n`; 
+    });
     
     text += `\n*Subtotal:* ${formatPrice(cartTotal)}\n`;
     
@@ -40,11 +57,17 @@ export default function CartDrawer() {
     
     text += `*Total a pagar:* *${formatPrice(finalTotal)}*\n\n`;
     
-    text += `*📍 Dados de Entrega:*\n`;
-    text += `Rua: ${street}, Nº ${number}\n`;
-    text += `Bairro: ${neighborhood}\n`;
-    text += `Referência: ${reference}\n\n`;
-    text += `Aguardando confirmação de pagamento e envio!`;
+    if (deliveryMode === 'delivery') {
+      text += `*📍 Dados de Entrega:*\n`;
+      text += `Rua: ${street}, Nº ${number}\n`;
+      text += `Bairro: ${neighborhood}\n`;
+      if (reference) text += `Referência: ${reference}\n`;
+    } else {
+      text += `*📍 Retirada na Loja:*\n`;
+      text += `${STORE_ADDRESS.full}\n`;
+    }
+    
+    text += `\nAguardando confirmação de pagamento e ${deliveryMode === 'delivery' ? 'envio' : 'retirada'}!`;
 
     const encoded = encodeURIComponent(text);
     window.open(`https://wa.me/${CLIENT_INFO.whatsapp}?text=${encoded}`, '_blank');
@@ -71,16 +94,16 @@ export default function CartDrawer() {
             className="fixed top-0 right-0 h-full w-full max-w-lg bg-white shadow-2xl z-[70] flex flex-col"
           >
             <div className="flex items-center justify-between p-6 border-b border-zinc-200 bg-gradient-to-r from-zinc-60 to-white">
-  <h2 className="text-xl font-black uppercase tracking-tighter text-zinc-500">
-    {isCheckout ? 'Finalizar Pedido' : 'Seu Carrinho'}
-  </h2>
-  <button 
-    onClick={() => setIsCartOpen(false)} 
-    className="p-2 hover:bg-zinc-200 rounded-full transition-colors"
-  >
-    <X size={24} className="text-zinc-900" />
-  </button>
-</div>
+              <h2 className="text-xl font-black uppercase tracking-tighter text-zinc-500">
+                {isCheckout ? 'Finalizar Pedido' : 'Seu Carrinho'}
+              </h2>
+              <button 
+                onClick={() => setIsCartOpen(false)} 
+                className="p-2 hover:bg-zinc-200 rounded-full transition-colors"
+              >
+                <X size={24} className="text-zinc-900" />
+              </button>
+            </div>
             
             <div className="flex-1 overflow-y-auto p-6 text-black">
               {cartItems.length === 0 ? (
@@ -179,43 +202,105 @@ export default function CartDrawer() {
                         />
                       </div>
 
+                      {/* NOVA SEÇÃO - MODALIDADE DE RECEBIMENTO */}
                       <div className="space-y-4 border-t border-zinc-200 pt-6">
-                        <p className="text-sm font-bold text-black uppercase tracking-widest">Endereço de Entrega</p>
-                        <div className="flex gap-4">
-                          <input 
-                            required 
-                            type="text" 
-                            value={street} 
-                            onChange={(e) => setStreet(e.target.value)} 
-                            placeholder="Rua" 
-                            className="w-2/3 border border-zinc-300 p-3 text-sm focus:border-black outline-none rounded-sm transition-all" 
-                          />
-                          <input 
-                            required 
-                            type="text" 
-                            value={number} 
-                            onChange={(e) => setNumber(e.target.value)} 
-                            placeholder="Número" 
-                            className="w-1/3 border border-zinc-300 p-3 text-sm focus:border-black outline-none rounded-sm transition-all" 
-                          />
+                        <p className="text-sm font-bold text-black uppercase tracking-widest">Modalidade de Recebimento</p>
+                        <div className="grid grid-cols-2 gap-3">
+                          <button
+                            type="button"
+                            onClick={() => setDeliveryMode('delivery')}
+                            className={`p-4 border-2 rounded-sm transition-all flex flex-col items-center justify-center gap-2 ${
+                              deliveryMode === 'delivery' 
+                                ? 'border-black bg-black text-white' 
+                                : 'border-zinc-300 hover:border-zinc-400'
+                            }`}
+                          >
+                            <MapPin size={24} />
+                            <span className="text-xs font-bold uppercase tracking-wide">Entrega</span>
+                          </button>
+                          
+                          <button
+                            type="button"
+                            onClick={() => setDeliveryMode('pickup')}
+                            className={`p-4 border-2 rounded-sm transition-all flex flex-col items-center justify-center gap-2 ${
+                              deliveryMode === 'pickup' 
+                                ? 'border-black bg-black text-white' 
+                                : 'border-zinc-300 hover:border-zinc-400'
+                            }`}
+                          >
+                            <Store size={24} />
+                            <span className="text-xs font-bold uppercase tracking-wide">Retirar</span>
+                          </button>
                         </div>
-                        <input 
-                          required 
-                          type="text" 
-                          value={neighborhood} 
-                          onChange={(e) => setNeighborhood(e.target.value)} 
-                          placeholder="Bairro" 
-                          className="w-full border border-zinc-300 p-3 text-sm focus:border-black outline-none rounded-sm transition-all" 
-                        />
-                        <input 
-                          type="text" 
-                          value={reference} 
-                          onChange={(e) => setReference(e.target.value)} 
-                          placeholder="Ponto de Referência (Opcional)" 
-                          className="w-full border border-zinc-300 p-3 text-sm focus:border-black outline-none rounded-sm transition-all" 
-                        />
                       </div>
 
+                      {/* ENDEREÇO DE ENTREGA - Só aparece se escolher delivery */}
+                      {deliveryMode === 'delivery' && (
+                        <div className="space-y-4 border-t border-zinc-200 pt-6">
+                          <p className="text-sm font-bold text-black uppercase tracking-widest">Endereço de Entrega</p>
+                          <div className="flex gap-4">
+                            <input 
+                              required 
+                              type="text" 
+                              value={street} 
+                              onChange={(e) => setStreet(e.target.value)} 
+                              placeholder="Rua" 
+                              className="w-2/3 border border-zinc-300 p-3 text-sm focus:border-black outline-none rounded-sm transition-all" 
+                            />
+                            <input 
+                              required 
+                              type="text" 
+                              value={number} 
+                              onChange={(e) => setNumber(e.target.value)} 
+                              placeholder="Número" 
+                              className="w-1/3 border border-zinc-300 p-3 text-sm focus:border-black outline-none rounded-sm transition-all" 
+                            />
+                          </div>
+                          <input 
+                            required 
+                            type="text" 
+                            value={neighborhood} 
+                            onChange={(e) => setNeighborhood(e.target.value)} 
+                            placeholder="Bairro" 
+                            className="w-full border border-zinc-300 p-3 text-sm focus:border-black outline-none rounded-sm transition-all" 
+                          />
+                          <input 
+                            type="text" 
+                            value={reference} 
+                            onChange={(e) => setReference(e.target.value)} 
+                            placeholder="Ponto de Referência (Opcional)" 
+                            className="w-full border border-zinc-300 p-3 text-sm focus:border-black outline-none rounded-sm transition-all" 
+                          />
+                        </div>
+                      )}
+
+                      {/* INFORMAÇÕES DA LOJA - Só aparece se escolher pickup */}
+                      {deliveryMode === 'pickup' && (
+                        <div className="space-y-4 border-t border-zinc-200 pt-6">
+                          <p className="text-sm font-bold text-black uppercase tracking-widest">Endereço da Loja</p>
+                          <div className="bg-zinc-50 p-4 rounded-sm border border-zinc-200">
+                            <div className="flex items-start gap-3">
+                              <Store className="text-black mt-1" size={20} />
+                              <div className="flex-1">
+                                <p className="font-bold text-black">{CLIENT_INFO.name}</p>
+                                <p className="text-sm text-zinc-600 mt-1">{STORE_ADDRESS.full}</p>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <a
+                            href={STORE_ADDRESS.mapsUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-full bg-blue-600 text-white py-3 px-4 font-bold uppercase tracking-widest text-sm hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 rounded-sm"
+                          >
+                            <MapPin size={18} />
+                            Ver Rota no Google Maps
+                          </a>
+                        </div>
+                      )}
+
+                      {/* MÉTODO DE PAGAMENTO */}
                       <div className="space-y-4 border-t border-zinc-200 pt-6">
                         <p className="text-sm font-bold text-black uppercase tracking-widest">Método de Pagamento</p>
                         <div className="relative">
@@ -288,7 +373,10 @@ export default function CartDrawer() {
                     <button 
                       type="submit" 
                       form="checkout-form" 
-                      className="w-2/3 bg-[#25D366] text-white py-4 font-bold uppercase tracking-widest text-sm hover:bg-green-600 transition-colors flex items-center justify-center gap-2 rounded-sm shadow-lg shadow-green-600/20"
+                      disabled={!deliveryMode}
+                      className={`w-2/3 bg-[#25D366] text-white py-4 font-bold uppercase tracking-widest text-sm transition-colors flex items-center justify-center gap-2 rounded-sm shadow-lg shadow-green-600/20 ${
+                        !deliveryMode ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-600'
+                      }`}
                     >
                       Concluir no WhatsApp <MessageCircle size={18} />
                     </button>

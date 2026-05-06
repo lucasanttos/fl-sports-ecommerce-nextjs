@@ -9,7 +9,7 @@ export const CLIENT_INFO = {
 };
 
 // 👉 AQUI EU CONFIGURO A TAXA DA MAQUININHA DE CARTÃO
-export const CARD_FEE_PERCENTAGE = 14.14; // Ex: 5 significa 5% de acréscimo.
+export const CARD_FEE_PERCENTAGE = 10 ; // Ex: 5 significa 5% de acréscimo.
 
 // 👉 Lógica de formatação de preço para R$
 export const formatPrice = (value: number) => {
