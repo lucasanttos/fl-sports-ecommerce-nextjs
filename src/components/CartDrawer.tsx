@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ShoppingBag, Plus, Minus, Trash2, ArrowRight, MessageCircle, ChevronDown, MapPin, Store } from 'lucide-react';
+import { X, ShoppingBag, Plus, Minus, Trash2, ArrowRight, MessageCircle, ChevronDown, MapPin, Store, CheckCircle2, Lock } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { CLIENT_INFO, formatPrice, CARD_FEE_PERCENTAGE } from '@/data/config';
 
@@ -16,9 +16,10 @@ const STORE_ADDRESS = {
 export default function CartDrawer() {
   const { cartItems, isCartOpen, setIsCartOpen, removeFromCart, updateQuantity, cartTotal } = useCart();
   const [isCheckout, setIsCheckout] = useState(false);
+  const [orderSent, setOrderSent] = useState(false);
   
   const [buyerName, setBuyerName] = useState('');
-  const [deliveryMode, setDeliveryMode] = useState(''); // 'delivery' ou 'pickup'
+  const [deliveryMode, setDeliveryMode] = useState(''); 
   const [street, setStreet] = useState('');
   const [number, setNumber] = useState('');
   const [neighborhood, setNeighborhood] = useState('');
@@ -29,6 +30,7 @@ export default function CartDrawer() {
     if (!isCartOpen) {
       setIsCheckout(false);
       setDeliveryMode('');
+      setOrderSent(false);
     }
   }, [isCartOpen]);
 
@@ -71,7 +73,15 @@ export default function CartDrawer() {
 
     const encoded = encodeURIComponent(text);
     window.open(`https://wa.me/${CLIENT_INFO.whatsapp}?text=${encoded}`, '_blank');
+    
+    setOrderSent(true);
+  };
+
+  const handleCloseAndReset = () => {
     setIsCartOpen(false);
+    setOrderSent(false);
+    setIsCheckout(false);
+    setDeliveryMode('');
   };
 
   return (
@@ -82,7 +92,7 @@ export default function CartDrawer() {
             initial={{ opacity: 0 }} 
             animate={{ opacity: 1 }} 
             exit={{ opacity: 0 }} 
-            onClick={() => setIsCartOpen(false)} 
+            onClick={handleCloseAndReset} 
             className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60]" 
           />
           
@@ -93,27 +103,97 @@ export default function CartDrawer() {
             transition={{ type: 'tween', duration: 0.5 }} 
             className="fixed top-0 right-0 h-full w-full max-w-lg bg-white shadow-2xl z-[70] flex flex-col"
           >
+            {/* HEADER */}
             <div className="flex items-center justify-between p-6 border-b border-zinc-200 bg-gradient-to-r from-zinc-60 to-white">
               <h2 className="text-xl font-black uppercase tracking-tighter text-zinc-500">
-                {isCheckout ? 'Finalizar Pedido' : 'Seu Carrinho'}
+                {orderSent ? 'Pedido Enviado!' : isCheckout ? 'Finalizar Pedido' : 'Seu Carrinho'}
               </h2>
               <button 
-                onClick={() => setIsCartOpen(false)} 
+                onClick={handleCloseAndReset} 
                 className="p-2 hover:bg-zinc-200 rounded-full transition-colors"
               >
                 <X size={24} className="text-zinc-900" />
               </button>
             </div>
             
+            {/* CONTEÚDO PRINCIPAL */}
             <div className="flex-1 overflow-y-auto p-6 text-black">
               {cartItems.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-full text-zinc-500">
                   <ShoppingBag size={64} className="mb-4 opacity-50 mx-auto" />
                   <p className="font-medium tracking-wide">Seu carrinho está vazio.</p>
                 </div>
+              ) : orderSent ? (
+                // ========== TELA DE SUCESSO ==========
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="flex flex-col items-center justify-center h-full text-center px-4"
+                >
+                  <div className="bg-green-100 rounded-full p-6 mb-6">
+                    <CheckCircle2 size={64} className="text-green-600" />
+                  </div>
+                  
+                  <h3 className="text-2xl font-black text-black mb-3">
+                    Pedido Enviado com Sucesso!
+                  </h3>
+                  
+                  <p className="text-zinc-600 mb-8 max-w-sm">
+                    Seu pedido foi enviado para nosso WhatsApp. 
+                    Em breve entraremos em contato para confirmar!
+                  </p>
+
+                  {/* SÓ MOSTRA O ENDEREÇO + MAPS SE FOR RETIRADA E DEPOIS DE ENVIAR */}
+                  {deliveryMode === 'pickup' && (
+                    <div className="w-full max-w-sm space-y-4">
+                      <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-4">
+                        <div className="flex items-start gap-3 mb-3">
+                          <Store className="text-blue-600 mt-1" size={24} />
+                          <div className="flex-1 text-left">
+                            <p className="font-bold text-black text-sm mb-2"> Endereço para Retirada:</p>
+                            <div className="bg-white border border-blue-300 rounded p-3">
+                              <p className="text-sm font-bold text-blue-900">{CLIENT_INFO.name}</p>
+                              <p className="text-sm text-zinc-700 mt-1">{STORE_ADDRESS.full}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <a
+                        href={STORE_ADDRESS.mapsUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full bg-blue-600 text-white py-4 px-4 font-bold uppercase tracking-widest text-sm hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 rounded-lg shadow-lg"
+                      >
+                        <MapPin size={20} />
+                        Ver Rota no Google Maps
+                      </a>
+
+                      <p className="text-xs text-zinc-500 mt-4">
+                        ⚠️ Aguarde a confirmação da loja antes de ir retirar seu pedido!
+                      </p>
+                    </div>
+                  )}
+
+                  {deliveryMode === 'delivery' && (
+                    <div className="bg-green-50 border-2 border-green-200 rounded-lg p-4 max-w-sm">
+                      <p className="text-sm text-green-800 font-medium">
+                        🛵 Seu pedido será entregue no endereço informado após a confirmação!
+                      </p>
+                    </div>
+                  )}
+
+                  <button
+                    onClick={handleCloseAndReset}
+                    className="mt-8 bg-black text-white py-3 px-8 font-bold uppercase tracking-widest text-sm hover:bg-zinc-800 transition-colors rounded-lg"
+                  >
+                    Fechar
+                  </button>
+                </motion.div>
               ) : (
                 <>
                   {!isCheckout ? (
+                    // ========== TELA DO CARRINHO ==========
                     <div className="space-y-6">
                       <AnimatePresence>
                         {cartItems.map((item) => (
@@ -175,6 +255,7 @@ export default function CartDrawer() {
                       </AnimatePresence>
                     </div>
                   ) : (
+                    // ========== TELA DE CHECKOUT ==========
                     <form id="checkout-form" onSubmit={handleFinishOrder} className="space-y-6 pb-12">
                       <div className="border-b border-zinc-200 pb-6">
                         <p className="text-sm font-bold text-zinc-500 uppercase tracking-widest mb-4">Resumo</p>
@@ -202,7 +283,7 @@ export default function CartDrawer() {
                         />
                       </div>
 
-                      {/* NOVA SEÇÃO - MODALIDADE DE RECEBIMENTO */}
+                      {/* MODALIDADE DE RECEBIMENTO */}
                       <div className="space-y-4 border-t border-zinc-200 pt-6">
                         <p className="text-sm font-bold text-black uppercase tracking-widest">Modalidade de Recebimento</p>
                         <div className="grid grid-cols-2 gap-3">
@@ -274,29 +355,39 @@ export default function CartDrawer() {
                         </div>
                       )}
 
-                      {/* INFORMAÇÕES DA LOJA - Só aparece se escolher pickup */}
+                      {/* ENDEREÇO CENSURADO - Só aparece se escolher pickup ANTES de enviar */}
                       {deliveryMode === 'pickup' && (
                         <div className="space-y-4 border-t border-zinc-200 pt-6">
-                          <p className="text-sm font-bold text-black uppercase tracking-widest">Endereço da Loja</p>
-                          <div className="bg-zinc-50 p-4 rounded-sm border border-zinc-200">
-                            <div className="flex items-start gap-3">
-                              <Store className="text-black mt-1" size={20} />
+                          <p className="text-sm font-bold text-black uppercase tracking-widest">Retirada na Loja</p>
+                          <div className="bg-zinc-100 border-2 border-zinc-300 p-5 rounded-sm relative overflow-hidden">
+                            {/* Efeito de blur/bloqueio */}
+                            <div className="absolute inset-0 bg-gradient-to-br from-zinc-200/90 to-zinc-300/90 backdrop-blur-sm flex items-center justify-center">
+                              <div className="text-center">
+                                <Lock className="mx-auto mb-3 text-zinc-600" size={32} />
+                                <p className="font-bold text-zinc-700 text-sm">Endereço Bloqueado</p>
+                                <p className="text-xs text-zinc-600 mt-1">Será revelado após confirmar o pedido</p>
+                              </div>
+                            </div>
+                            
+                            {/* Conteúdo censurado (blur de fundo) */}
+                            <div className="flex items-start gap-3 blur-sm">
+                              <Store className="text-zinc-400 mt-1" size={20} />
                               <div className="flex-1">
-                                <p className="font-bold text-black">{CLIENT_INFO.name}</p>
-                                <p className="text-sm text-zinc-600 mt-1">{STORE_ADDRESS.full}</p>
+                                <p className="font-bold text-zinc-400 text-sm">███████████</p>
+                                <p className="text-sm text-zinc-400 mt-1">Rua ████████, N° ██ - ██████</p>
                               </div>
                             </div>
                           </div>
                           
-                          <a
-                            href={STORE_ADDRESS.mapsUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="w-full bg-blue-600 text-white py-3 px-4 font-bold uppercase tracking-widest text-sm hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 rounded-sm"
-                          >
-                            <MapPin size={18} />
-                            Ver Rota no Google Maps
-                          </a>
+                          <div className="bg-amber-50 border border-amber-200 p-3 rounded-sm">
+                            <p className="text-xs text-amber-800 font-medium flex items-start gap-2">
+                              <span className="text-base">🔒</span>
+                              <span>
+                                O endereço completo e a rota no mapa serão disponibilizados 
+                                após você finalizar o pedido no WhatsApp.
+                              </span>
+                            </p>
+                          </div>
                         </div>
                       )}
 
@@ -334,7 +425,8 @@ export default function CartDrawer() {
               )}
             </div>
 
-            {cartItems.length > 0 && (
+            {/* FOOTER - BOTÕES */}
+            {cartItems.length > 0 && !orderSent && (
               <div className="border-t border-zinc-200 p-6 bg-zinc-50">
                 <div className="flex justify-between items-center mb-1">
                   <span className="text-xs font-bold uppercase tracking-widest text-zinc-500">Subtotal</span>
