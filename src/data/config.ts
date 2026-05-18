@@ -611,6 +611,39 @@ export const PRODUCTS = [
     ],
   },
 
+      // conjunto
+{
+    id: 130,
+    name: "Conjunto de short duplo 3P",
+    price: 139.90,
+    category: "Conjunto",
+    slug: "conjuntos",
+    images: ["/imagens/produtos/conjunto-3p.jpeg",
+      "/imagens/produtos/conjunto-3pa.jpeg"
+    ],
+    
+    sizes: ["M","G","GG"],
+    colors: [
+      { name: "Azul ciano", hex: "#4dd6ff" },
+    ],
+  },
+{
+    id: 131,
+    name: "Conjunto de short duplo 2P",
+    price: 129.90,
+    category: "Conjunto",
+    slug: "conjuntos",
+    images: ["/imagens/produtos/conjunto-2p.jpeg",
+      "/imagens/produtos/conjunto-2pa.jpeg"
+    ],
+    
+    sizes: ["M","G","GG"],
+    colors: [
+      { name: "Azul ciano", hex: "#4dd6ff" },
+    ],
+  },
+
+
 ];
 
 // 👉 COLEÇÕES/CATEGORIAS
@@ -747,6 +780,13 @@ export const CATEGORIES = [
     title: "Camisas Retrô",
     subtitle: "Moda que fica pra sempre",
     imgColor: "bg-gradient-to-br from-orange-900 to-black-900",
+  },
+  {
+    id: "conjuntos",
+    slug: "conjuntos",
+    title: "Conjuntos",
+    subtitle: "Complete seu look com atitude e estilo",
+    imgColor: "bg-gradient-to-br from-teal-500 to-teal-900",
   },
  // {
 //id: "blusa-frases",
