@@ -3,10 +3,9 @@ import { Inter } from 'next/font/google'
 import { GoogleAnalytics } from '@next/third-parties/google'
 import './globals.css'
 import { CartProvider } from '@/context/CartContext'
-import Navbar from '@/components/Navbar'
-import Footer from '@/components/Footer'
-import CartDrawer from '@/components/CartDrawer'
-import QuickAddModal from '@/components/QuickAddModal'
+
+// 👉 NOSSO NOVO COMPONENTE DE CONTROLE
+import ConditionalUI from '@/components/ConditionalUI' 
 
 // 👉 CONFIGURAÇÃO DA FONTE: 
 const inter = Inter({ 
@@ -17,7 +16,7 @@ const inter = Inter({
 
 // 👉 CONFIGURAÇÃO DA TELA (VIEWPORT): 
 export const viewport: Viewport = {
-  themeColor: '#000000', // Deixa a aba do navegador no celular elegante (preta)
+  themeColor: '#000000',
   width: 'device-width',
   initialScale: 1,
 }
@@ -61,15 +60,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-screen flex flex-col bg-white text-black font-sans antialiased selection:bg-black selection:text-white">
         
         <CartProvider>
-          <Navbar />
-          <CartDrawer />
-          <QuickAddModal />
-          
-          <main className="flex-grow pt-[88px] w-full overflow-hidden">
+          {/* 👉 A MÁGICA DE SEPARAÇÃO ACONTECE AQUI DENTRO AGORA */}
+          <ConditionalUI>
             {children}
-          </main>
-          
-          <Footer />
+          </ConditionalUI>
         </CartProvider>
 
         {/* 👉 GOOGLE ANALYTICS */}

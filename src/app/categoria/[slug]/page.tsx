@@ -1,7 +1,9 @@
 "use client";
+import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { PRODUCTS, CATEGORIES, formatPrice } from '@/data/config';
 import { useCart } from '@/context/CartContext';
+import { supabase } from '@/lib/supabase'; // 👉 Conexão adicionada
 import ScrollReveal from '@/components/ScrollReveal';
 import { ShoppingBag } from 'lucide-react';
 
@@ -9,9 +11,40 @@ export default function CategoriaEspecifica() {
   const params = useParams();
   const slug = params.slug as string;
   const { setQuickAddProduct } = useCart();
-  const categoryInfo = CATEGORIES.find(c => c.slug === slug);
-  const categoryProducts = PRODUCTS.filter(p => p.slug === slug);
+  
+  const [categoryInfo, setCategoryInfo] = useState<any>(null);
+  const [categoryProducts, setCategoryProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    const loadCategoryData = async () => {
+      try {
+        // Busca a categoria e os produtos no Supabase
+        const { data: dbCats } = await supabase.from("categories").select("*");
+        const { data: dbProds } = await supabase.from("products").select("*").eq("category_slug", slug);
+
+        // Une as categorias (banco + locais) para achar o título/subtítulo
+        const combinedCats = [...(dbCats || []).map(c => ({ ...c, imgColor: c.imgcolor })), ...CATEGORIES];
+        const foundCat = combinedCats.find(c => c.slug === slug);
+        setCategoryInfo(foundCat);
+
+        // Une os produtos da nuvem desta categoria com os locais filtrados
+        const localProds = PRODUCTS.filter(p => p.slug === slug);
+        setCategoryProducts([...(dbProds || []), ...localProds]);
+      } catch (error) {
+        console.error("Erro ao carregar dados da categoria:", error);
+        // Fallback local se a nuvem falhar
+        setCategoryInfo(CATEGORIES.find(c => c.slug === slug));
+        setCategoryProducts(PRODUCTS.filter(p => p.slug === slug));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadCategoryData();
+  }, [slug]);
+
+  if (loading) return <div className="py-32 text-center text-zinc-500 font-bold tracking-widest animate-pulse">CARREGANDO...</div>;
   if (!categoryInfo) return <div className="p-24 text-center font-bold text-2xl">Categoria não encontrada.</div>;
 
   return (
@@ -29,7 +62,7 @@ export default function CategoriaEspecifica() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {categoryProducts.map((product, index) => (
-            <ScrollReveal key={product.id} delay={(index % 4) * 0.1} direction="up">
+            <ScrollReveal key={`cat-prod-${product.slug || product.id}-${index}`} delay={(index % 4) * 0.1} direction="up">
               <div className="group cursor-pointer">
                 <div className="aspect-[3/4] bg-zinc-100 mb-6 relative overflow-hidden rounded-sm">
                   {product.images && product.images.length > 0 ? (
@@ -43,7 +76,6 @@ export default function CategoriaEspecifica() {
                        <ShoppingBag className="text-zinc-300 w-16 h-16" />
                      </div>
                   )}
-                  {/* 👉 MOBILE */}
                   <div className="absolute bottom-0 left-0 w-full p-4 transform translate-y-0 lg:translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-[0.16,1,0.3,1]">
                     <button 
                       onClick={() => setQuickAddProduct(product)} 
